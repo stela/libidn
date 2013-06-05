@@ -36,10 +36,10 @@ libidn-$(VERSION).jar:
 		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/PunycodeException.class		\
 		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RFC3454.class			\
 		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet.class			\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet$$1.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet$$Builder.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet$$Range.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet$$RangeContainsComparator.class	\
+		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$1.class		\
+		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$Builder.class	\
+		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$Range.class		\
+		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$RangeContainsComparator.class \
 		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/Stringprep.class		\
 		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/StringprepException.class
 
