@@ -18,6 +18,7 @@
 
 SUBDIRS = gnu .
 INSTALL_TARGETS =
+AM_JAVACFLAGS = -source 1.5 -target 1.5 -encoding UTF-8
 
 if JAVA
 

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 JAVAROOT = $(top_builddir)/java/src/test/java
-AM_JAVACFLAGS = -classpath $(top_builddir)/java/libidn-$(VERSION).jar:$(top_srcdir)/java/libidn-$(VERSION).jar
+AM_JAVACFLAGS = -source 1.5 -target 1.5 -encoding UTF-8 -classpath $(top_builddir)/java/libidn-$(VERSION).jar:$(top_srcdir)/java/libidn-$(VERSION).jar
 
 if JAVA
 dist_noinst_JAVA = 

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 JAVAROOT = $(top_builddir)/java/src/util/java
-AM_JAVACFLAGS = -classpath $(top_builddir)/java/src/main/java
+AM_JAVACFLAGS = -source 1.5 -target 1.5 -encoding UTF-8 -classpath $(top_builddir)/java/src/main/java
 
 if JAVA
 dist_noinst_JAVA = \
