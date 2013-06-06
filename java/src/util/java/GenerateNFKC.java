@@ -33,6 +33,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Iterator;
@@ -51,10 +54,9 @@ public class GenerateNFKC
 
   static String[] split(String in, char sep)
   {
-    StringBuilder sb = new StringBuilder(in);
     int c = 0;
-    for (int i = 0; i < sb.length(); i++) {
-      if (sb.charAt(i) == sep) {
+    for (int i = 0; i < in.length(); i++) {
+      if (in.charAt(i) == sep) {
 	c++;
       }
     }
@@ -62,24 +64,24 @@ public class GenerateNFKC
     String out[] = new String[c+1];
     c = 0;
     int l = 0;
-    for (int i = 0; i < sb.length(); i++) {
-      if (sb.charAt(i) == sep) {
+    for (int i = 0; i < in.length(); i++) {
+      if (in.charAt(i) == sep) {
 	if (l >= i) {
 	  out[c] = "";
 	} else {
-	  out[c] = sb.substring(l, i);
+	  out[c] = in.substring(l, i);
 	}
         l = i+1;
 	c++;
       }
     }
-    if (l < sb.length()) {
-      out[c] = sb.substring(l);
+    if (l < in.length()) {
+      out[c] = in.substring(l);
     }
     return out;
   }
 
-  static boolean isCompatibilityMapping(String in)
+  static boolean isCompatibilityMapping(CharSequence in)
   {
     return in.length() > 0 && in.charAt(0) == '<';
   }
@@ -93,35 +95,35 @@ public class GenerateNFKC
   {
     StringBuilder out = new StringBuilder();
     String[] chars = split(in, ' ');
-    for (int i = 0; i < chars.length; i++) {
-      if (chars[i].equals("005C")) {
+    for (String aChar : chars) {
+      if ("005C".equals(aChar)) {
 	out.append("\\\\");
-      } else if (chars[i].equals("0022")) {
+      } else if ("0022".equals(aChar)) {
 	out.append("\\\"");
       } else {
 	out.append("\\u");
-	out.append(chars[i]);
+	out.append(aChar);
       }
     }
     return out.toString();
   }
 
-  static String decompose(String in, TreeMap mappings)
+  static String decompose(String in, SortedMap<String, String> mappings)
   {
-    StringBuilder out = new StringBuilder("");
-    String[] c = split(in, ' ');
+    StringBuilder out = new StringBuilder();
+    String[] cols = split(in, ' ');
 
-    for (int i = 0; i < c.length; i++) {
-      if (mappings.containsKey(c[i])) {
+    for (String col : cols) {
+      if (mappings.containsKey(col)) {
 	if (out.length() > 0) {
 	  out.append(" ");
 	}
-	out.append(decompose((String) mappings.get(c[i]), mappings));
+	out.append(decompose(mappings.get(col), mappings));
       } else {
 	if (out.length() > 0) {
 	  out.append(" ");
 	}
-	out.append(c[i]);
+	out.append(col);
       }
     }
 
@@ -144,7 +146,7 @@ public class GenerateNFKC
     }
 
     // Read CompositionExclusions
-    TreeSet exclusions = new TreeSet();
+    SortedSet<String> exclusions = new TreeSet<String>();
     {
       BufferedReader r = new BufferedReader(new FileReader("CompositionExclusions.txt"));
       String line;
@@ -163,9 +165,9 @@ public class GenerateNFKC
     }
 
     // Read UnicodeData
-    TreeMap canonical = new TreeMap();
-    TreeMap compatibility = new TreeMap();
-    TreeMap combiningClasses = new TreeMap();
+    SortedMap<String, String> canonical = new TreeMap<String, String>();
+    SortedMap<String, String> compatibility = new TreeMap<String, String>();
+    SortedMap<Integer, String> combiningClasses = new TreeMap<Integer, String>();
 
     {
       BufferedReader r = new BufferedReader(new FileReader("UnicodeData.txt"));
@@ -205,10 +207,8 @@ public class GenerateNFKC
     while (true) {
       boolean replaced = false;
 
-      Iterator i = compatibility.keySet().iterator();
-      while (i.hasNext()) {
-	String k = (String) i.next();
-	String v = (String) compatibility.get(k);
+      for (String k : compatibility.keySet()) {
+	String v = compatibility.get(k);
 
 	String d = decompose(v, compatibility);
 	if (!d.equals(v)) {
@@ -223,15 +223,13 @@ public class GenerateNFKC
     }
 
     // Eliminate duplicate mappings
-    TreeMap compatibilityKeys = new TreeMap();
-    ArrayList compatibilityMappings = new ArrayList();
+    SortedMap<String, Integer> compatibilityKeys = new TreeMap<String, Integer>();
+    List<String> compatibilityMappings = new ArrayList<String>();
 
     {
-      Iterator i = compatibility.keySet().iterator();
-      while (i.hasNext()) {
-	String k = (String) i.next();
-	String v = (String) compatibility.get(k);
-	
+      for (String k : compatibility.keySet()) {
+	String v = compatibility.get(k);
+
 	int index = compatibilityMappings.indexOf(v);
 	if (index == -1) {
 	  index = compatibilityMappings.size();
@@ -242,14 +240,14 @@ public class GenerateNFKC
     }
 
     // Create composition tables
-    TreeMap firstMap = new TreeMap();
-    TreeMap secondMap = new TreeMap();
+    SortedMap<String, Integer> firstMap = new TreeMap<String, Integer>();
+    SortedMap<String, Integer> secondMap = new TreeMap<String, Integer>();
     
     {
-      Iterator i = canonical.keySet().iterator();
+      Iterator<String> i = canonical.keySet().iterator();
       while (i.hasNext()) {
-	String k = (String) i.next();
-	String v = (String) canonical.get(k);
+	String k = i.next();
+	String v = canonical.get(k);
 
 	String[] s = split(v, ' ');
 
@@ -257,8 +255,8 @@ public class GenerateNFKC
 	  // If both characters have the same combining class, they
 	  // won't be combined (in the sequence AB, B is blocked from
 	  // A if both have the same combining class)
-	  String cc1 = (String) combiningClasses.get(new Integer(Integer.parseInt(s[0], 16)));
-	  String cc2 = (String) combiningClasses.get(new Integer(Integer.parseInt(s[1], 16)));
+	  String cc1 = combiningClasses.get(new Integer(Integer.parseInt(s[0], 16)));
+	  String cc2 = combiningClasses.get(new Integer(Integer.parseInt(s[1], 16)));
 	  if (cc1 != null || (cc1 != null && cc1.equals(cc2))) {
 	    // Ignore this composition
 	    i.remove();
@@ -266,14 +264,14 @@ public class GenerateNFKC
 	  }
 
 	  if (firstMap.containsKey(s[0])) {
-	    Integer c = (Integer) firstMap.get(s[0]);
+	    Integer c = firstMap.get(s[0]);
 	    firstMap.put(s[0], new Integer(c.intValue()+1));
 	  } else {
 	    firstMap.put(s[0], new Integer(1));
 	  }
 
 	  if (secondMap.containsKey(s[1])) {
-	    Integer c = (Integer) secondMap.get(s[1]);
+	    Integer c = secondMap.get(s[1]);
 	    secondMap.put(s[1], new Integer(c.intValue()+1));
 	  } else {
 	    secondMap.put(s[1], new Integer(1));
@@ -285,39 +283,37 @@ public class GenerateNFKC
       }
     }
 
-    TreeMap singleFirstComposition = new TreeMap();
-    TreeMap singleSecondComposition = new TreeMap();
-    TreeMap complexComposition = new TreeMap();
+    SortedMap<String, String[]> singleFirstComposition = new TreeMap<String, String[]>();
+    SortedMap<String, String[]> singleSecondComposition = new TreeMap<String, String[]>();
+    SortedMap<String, SortedMap<String, String>> complexComposition = new TreeMap<String, SortedMap<String, String>>();
 
     int composeLookupMax = 0;
     {
-      Iterator i = canonical.keySet().iterator();
-      while (i.hasNext()) {
-	String k = (String) i.next();
-	String v = (String) canonical.get(k);
+      for (String k : canonical.keySet()) {
+	String v = canonical.get(k);
 
 	String[] s = split(v, ' ');
 
 	if (s.length == 2) {
-	  Integer first = (Integer) firstMap.get(s[0]);
-	  Integer second = (Integer) secondMap.get(s[1]);
+	  Integer first = firstMap.get(s[0]);
+	  Integer second = secondMap.get(s[1]);
 
 	  if (first.intValue() == 1) {
-	    singleFirstComposition.put(s[0], new String[] { s[1], k });
+	    singleFirstComposition.put(s[0], new String[]{s[1], k});
 	    composeLookupMax = Math.max(composeLookupMax, Integer.parseInt(s[0], 16));
 	  } else if (second.intValue() == 1) {
-	    singleSecondComposition.put(s[1], new String[] { s[0], k });
+	    singleSecondComposition.put(s[1], new String[]{s[0], k});
 	    composeLookupMax = Math.max(composeLookupMax, Integer.parseInt(s[1], 16));
 	  } else {
 	    if (complexComposition.containsKey(s[0])) {
-	      TreeMap m = (TreeMap) complexComposition.get(s[0]);
+	      SortedMap<String, String> m = complexComposition.get(s[0]);
 	      if (m.containsKey(s[1])) {
-		System.err.println("? ambiguous canonical mapping for "+s[0]);
+		System.err.println("? ambiguous canonical mapping for " + s[0]);
 		System.exit(1);
 	      }
 	      m.put(s[1], k);
 	    } else {
-	      TreeMap m = new TreeMap();
+	      SortedMap<String, String> m = new TreeMap<String, String>();
 	      m.put(s[1], k);
 	      complexComposition.put(s[0], m);
 	    }
@@ -352,11 +348,11 @@ public class GenerateNFKC
 	boolean empty = true;
 	
 	StringBuilder page = new StringBuilder();
-	page.append("    { /* Page "+i+" */");
+	page.append("    { /* Page ").append(i).append(" */");
 	
 	for (int j = 0; j < 256; j++) {
 	  Integer c = new Integer((i << 8) + j);
-	  String cc = (String) combiningClasses.get(c);
+	  String cc = combiningClasses.get(c);
 	  
 	  if (0 == (j & 31)) {
 	    page.append("\n      ");
@@ -364,7 +360,7 @@ public class GenerateNFKC
 	  if (cc == null) {
 	    page.append("0, ");
 	  } else {
-	    page.append(cc+", ");
+	    page.append(cc).append(", ");
 	    empty = false;
 	  }
 	}
@@ -406,11 +402,9 @@ public class GenerateNFKC
       w.println("public class DecompositionKeys");
       w.println("{");
       w.println("  public final static int[] k = new int[] {");
-      Iterator i = compatibilityKeys.keySet().iterator();
-      while (i.hasNext()) {
-	String k  = (String) i.next();
-	int index = ((Integer) compatibilityKeys.get(k)).intValue();
-	w.println("    '\\u"+k+"', "+index+",");
+      for (String k : compatibilityKeys.keySet()) {
+	int index = (compatibilityKeys.get(k)).intValue();
+	w.println("    '\\u" + k + "', " + index + ",");
       }
       w.println("  };");
       w.println("}");
@@ -433,10 +427,8 @@ public class GenerateNFKC
       w.println("public class DecompositionMappings");
       w.println("{");
       w.println("  public final static String[] m = new String[] {");
-      Iterator i = compatibilityMappings.iterator();
-      while (i.hasNext()) {
-	String m = (String) i.next();
-	w.println("    \""+toJavaString(m)+"\",");
+      for (String m : compatibilityMappings) {
+	w.println("    \"" + toJavaString(m) + "\",");
       }
       w.println("  };");
       w.println("}");
@@ -460,14 +452,14 @@ public class GenerateNFKC
       w.println("public class Composition");
       w.println("{");
 
-      Iterator i;
+      Iterator<String> i;
       int index = 0;
 
-      TreeMap indices = new TreeMap();
+      SortedMap<Integer, Integer> indices = new TreeMap<Integer, Integer>();
 
       i = complexComposition.keySet().iterator();
       while (i.hasNext()) {
-	String s0 = (String) i.next();
+	String s0 = i.next();
 	indices.put(new Integer(Integer.parseInt(s0, 16)), new Integer(index));
 	index++;
       }
@@ -477,16 +469,14 @@ public class GenerateNFKC
       w.println("  public final static char[][] multiFirst = new char[][] {");
       i = complexComposition.keySet().iterator();
       while (i.hasNext()) {
-	String s0 = (String) i.next();
-	TreeMap m = (TreeMap) complexComposition.get(s0);
+	String s0 = i.next();
+	SortedMap<String, String> m = complexComposition.get(s0);
 
-	TreeMap line = new TreeMap();
+	SortedMap<Integer, String> line = new TreeMap<Integer, String>();
 	int maxIndex = 1;
 
-	Iterator i2 = m.keySet().iterator();
-	while (i2.hasNext()) {
-	  String s1 = (String) i2.next();
-	  String k = (String) m.get(s1);
+	for (String s1 : m.keySet()) {
+	  String k = m.get(s1);
 
 	  Integer s1i = new Integer(Integer.parseInt(s1, 16));
 
@@ -495,13 +485,13 @@ public class GenerateNFKC
 	    index++;
 	  }
 	  line.put(indices.get(s1i), k);
-	  maxIndex = Math.max(maxIndex, ((Integer) indices.get(s1i)).intValue());
+	  maxIndex = Math.max(maxIndex, (indices.get(s1i)).intValue());
 	}
 
 	w.print("    { ");
 	for (int j = multiSecondStart; j <= maxIndex; j++) {
 	  if (line.containsKey(new Integer(j))) {
-	    String s = (String) line.get(new Integer(j));
+	    String s = line.get(new Integer(j));
 	    w.print("'"+toJavaString(s)+"', ");
 	  } else {
 	    w.print("       0, ");
@@ -516,8 +506,8 @@ public class GenerateNFKC
       w.println("  public final static char[][] singleFirst = new char[][] {");
       i = singleFirstComposition.keySet().iterator();
       while (i.hasNext()) {
-	String k = (String) i.next();
-	String[] v = ((String[]) singleFirstComposition.get(k));
+	String k = i.next();
+	String[] v = (singleFirstComposition.get(k));
 	w.println("    { '"+toJavaString(v[0])+"', '"+toJavaString(v[1])+"' },");
 
 	if (indices.containsKey(new Integer(Integer.parseInt(k, 16)))) {
@@ -534,8 +524,8 @@ public class GenerateNFKC
       w.println("  public final static char[][] singleSecond = new char[][] {");
       i = singleSecondComposition.keySet().iterator();
       while (i.hasNext()) {
-	String k = (String) i.next();
-	String[] v = ((String[]) singleSecondComposition.get(k));
+	String k = i.next();
+	String[] v = (singleSecondComposition.get(k));
 	w.println("    { '"+toJavaString(v[0])+"', '"+toJavaString(v[1])+"' },");
 
 	indices.put(new Integer(Integer.parseInt(k, 16)), new Integer(index));

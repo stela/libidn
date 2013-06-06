@@ -47,10 +47,9 @@ public class TestNFKC
 
   static String[] split(String in, char sep)
   {
-    StringBuilder sb = new StringBuilder(in);
     int c = 0;
-    for (int i = 0; i < sb.length(); i++) {
-      if (sb.charAt(i) == sep) {
+    for (int i = 0; i < in.length(); i++) {
+      if (in.charAt(i) == sep) {
 	c++;
       }
     }
@@ -58,19 +57,19 @@ public class TestNFKC
     String out[] = new String[c+1];
     c = 0;
     int l = 0;
-    for (int i = 0; i < sb.length(); i++) {
-      if (sb.charAt(i) == sep) {
+    for (int i = 0; i < in.length(); i++) {
+      if (in.charAt(i) == sep) {
 	if (l >= i) {
 	  out[c] = "";
 	} else {
-	  out[c] = sb.substring(l, i);
+	  out[c] = in.substring(l, i);
 	}
         l = i+1;
 	c++;
       }
     }
-    if (l < sb.length()) {
-      out[c] = sb.substring(l);
+    if (l < in.length()) {
+      out[c] = in.substring(l);
     }
     return out;
   }
@@ -78,8 +77,8 @@ public class TestNFKC
   static boolean containsHighChar(String in)
   {
     String[] s = split(in, ' ');
-    for (int i = 0; i < s.length; i++) {
-      if (s[i].length() != 4) {
+    for (String value : s) {
+      if (value.length() != 4) {
 	return true;
       }
     }
@@ -90,8 +89,8 @@ public class TestNFKC
   {
     StringBuilder out = new StringBuilder();
     String[] s = split(in, ' ');
-    for (int i = 0; i < s.length; i++) {
-      out.append((char) Integer.parseInt(s[i], 16));
+    for (String value : s) {
+      out.append((char) Integer.parseInt(value, 16));
     }
     return out.toString();
   }

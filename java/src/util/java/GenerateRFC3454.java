@@ -93,8 +93,6 @@ public class GenerateRFC3454
     w.println("public class RFC3454");
     w.println("{");
     
-    int n = 0;
-    
     String t = null;
     StringBuilder o1 = null;
     StringBuilder o2 = null;
@@ -108,18 +106,18 @@ public class GenerateRFC3454
       
       if (l.equals("")) {
 	// Ignore empty line
-      } else if (-1 != l.indexOf("\u000c")) {
+      } else if (l.contains("\u000c")) {
 	// Ignore FF
       } else if (0 == l.indexOf("RFC")) {
 	// Ignore page header
       } else if (0 == l.indexOf("Hoffman & Blanchet")) {
 	// Ignore page footer
-      } else if (-1 != l.indexOf("----- Start Table ")) {
+      } else if (l.contains("----- Start Table ")) {
 	// Start of a table
 	t = l.substring(l.indexOf("Table")+6, l.lastIndexOf("-----")-1);
 	o1 = new StringBuilder();
 	o2 = new StringBuilder();
-      } else if (-1 != l.indexOf("----- End Table ")) {
+      } else if (l.contains("----- End Table ")) {
 	// End of a table
 	if ("A.1".equals(t)) {
 	  w.println("  final static char[][] A1 = new char[][] {\n"+o1.toString()+"  };\n");
@@ -188,16 +186,16 @@ public class GenerateRFC3454
 	  }
 	} else if ("B.1".equals(t)) {
 	  StringTokenizer tok = new StringTokenizer(l, " ;");
-	  o1.append("    '\\u"+tok.nextToken()+"',\n");
+	  o1.append("    '\\u").append(tok.nextToken()).append("',\n");
 	} else if ("B.2".equals(t) || "B.3".equals(t)) {
 	  StringTokenizer tok = new StringTokenizer(l, "; ");
 	  String c = tok.nextToken();
 	  if (c.length() == 4) {
-	    o1.append("    '\\u"+c+"',\n");
+	    o1.append("    '\\u").append(c).append("',\n");
 	    if (tok.hasMoreElements()) {
 	      o2.append("    \"");
 	      while (tok.hasMoreElements()) {
-		o2.append("\\u"+tok.nextToken());
+		o2.append("\\u").append(tok.nextToken());
 	      }
 	      o2.append("\",\n");
 	    } else {
@@ -205,12 +203,12 @@ public class GenerateRFC3454
 	    }
 	  }
 	} else if ("C.1.1".equals(t)) {
-	  o1.append("    '\\u"+l+"',\n");
+	  o1.append("    '\\u").append(l).append("',\n");
 	} else if ("C.1.2".equals(t)) {
-	  o1.append("    '\\u"+l+"',\n");
+	  o1.append("    '\\u").append(l).append("',\n");
 	} else if ("C.2.1".equals(t) || "C.2.2".equals(t) || "C.3".equals(t) || "C.4".equals(t) || "C.5".equals(t) || "C.6".equals(t) || "C.7".equals(t) || "C.8".equals(t) || "D.1".equals(t) || "D.2".equals(t)) {
 	  if (4 == l.length()) {
-	    o1.append("    new char[] { '\\u"+l+"' },\n");
+	    o1.append("    new char[] { '\\u").append(l).append("' },\n");
 	  } else if (9 == l.length()) {
 	    o1.append("    new char[] { '\\u");
 	    o1.append(l.substring(0, 4));
@@ -220,8 +218,6 @@ public class GenerateRFC3454
 	  }
 	}
       }
-      
-      n++;
     }
     
     w.println("}");
