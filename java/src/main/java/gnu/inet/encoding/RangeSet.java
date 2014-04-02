@@ -110,7 +110,7 @@ public final class RangeSet
     public String toString()
     {
       return "[" + Integer.toHexString(first).toUpperCase(Locale.ENGLISH) + ","
-	         + Integer.toHexString(last).toUpperCase(Locale.ENGLISH) + ']';
+	  + Integer.toHexString(last).toUpperCase(Locale.ENGLISH) + ']';
     }
 
     //@Override
