@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-# Copyright (C) 2002-2012 Simon Josefsson.
+# Copyright (C) 2002-2013 Simon Josefsson.
 #
 # This file is part of GNU Libidn.
 #
@@ -60,6 +60,7 @@ idn.1: $(top_srcdir)/src/idn.c $(top_srcdir)/src/idn.ggo \
 
 # GDOC
 
+GDOC_BIN = $(srcdir)/gdoc
 GDOC_SRC = $(top_srcdir)/lib/idna.c $(top_srcdir)/lib/nfkc.c	\
 	$(top_srcdir)/lib/pr29.c $(top_srcdir)/lib/punycode.c	\
 	$(top_srcdir)/lib/stringprep.c $(top_srcdir)/lib/tld.c	\
@@ -74,6 +75,6 @@ GDOC_MAN_PREFIX = man/
 GDOC_MAN_EXTRA_ARGS = -module $(PACKAGE) -sourceversion $(VERSION) \
 	-bugsto $(PACKAGE_BUGREPORT) -pkg-name "$(PACKAGE_NAME)" \
 	-includefuncprefix -seeinfo $(PACKAGE) \
-	-copyright "2002-2012 Simon Josefsson" \
+	-copyright "2002-2013 Simon Josefsson" \
 	-verbatimcopying
-include $(srcdir)/Makefile.gdoci
+include $(srcdir)/gdoc.mk

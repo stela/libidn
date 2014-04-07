@@ -1,5 +1,5 @@
 /* nfkc.c --- Unicode normalization utilities.
-   Copyright (C) 2002-2012 Simon Josefsson
+   Copyright (C) 2002-2013 Simon Josefsson
 
    This file is part of GNU Libidn.
 
@@ -223,7 +223,7 @@ static const gchar utf8_skip_data[256] = {
   5, 5, 5, 6, 6, 1, 1
 };
 
-const gchar *const g_utf8_skip = utf8_skip_data;
+static const gchar *const g_utf8_skip = utf8_skip_data;
 
 /*
  * g_utf8_strlen:
@@ -872,7 +872,7 @@ _g_utf8_normalize_wc (const gchar * str, gssize max_len, GNormalizeMode mode)
     {
       g_unicode_canonical_ordering (wc_buffer + last_start,
 				    n_wc - last_start);
-      last_start = n_wc;
+      // dead assignment: last_start = n_wc;
     }
 
   wc_buffer[n_wc] = 0;

@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-# Copyright (C) 2004-2012 Simon Josefsson
+# Copyright (C) 2004-2013 Simon Josefsson
 #
 # This file is part of GNU Libidn.
 #
@@ -18,13 +18,12 @@
 
 SUBDIRS = gnu .
 INSTALL_TARGETS =
-AM_JAVACFLAGS = -source 1.5 -target 1.5 -encoding UTF-8
 
 if JAVA
 
 # Invoked by ../doc/java/Makefile.
 .PHONY: javadoc
 javadoc:
-	cd $(srcdir) && $(GJDOC) -d $(top_builddir)/doc/java gnu/inet/encoding/*.java
+	cd $(srcdir) && \
+		$(GJDOC) -d $(top_builddir)/doc/java gnu/inet/encoding/*.java
 endif
-

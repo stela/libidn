@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2012 Free Software Foundation, Inc.
+# Copyright (C) 2002-2013 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ AC_DEFUN([lgl_EARLY],
   # Code from module environ-tests:
   # Code from module extensions:
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  # Code from module extern-inline:
   # Code from module gettext-h:
   # Code from module gperf:
   # Code from module havelib:
@@ -138,45 +139,46 @@ AC_DEFUN([lgl_INIT],
   m4_pushdef([lgl_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='lib/gl'
-AC_SUBST([LIBINTL])
-AC_SUBST([LTLIBINTL])
-AM_ICONV
-m4_ifdef([gl_ICONV_MODULE_INDICATOR],
-  [gl_ICONV_MODULE_INDICATOR([iconv])])
-gl_ICONV_H
-gl_FUNC_ICONV_OPEN
-if test $REPLACE_ICONV_OPEN = 1; then
-  AC_LIBOBJ([iconv_open])
-fi
-if test $REPLACE_ICONV = 1; then
-  AC_LIBOBJ([iconv])
-  AC_LIBOBJ([iconv_close])
-fi
-gl_INLINE
-gl_LD_OUTPUT_DEF
-gl_LD_VERSION_SCRIPT
-gl_VISIBILITY
-gl_MULTIARCH
-AM_STDBOOL_H
-gl_STDDEF_H
-gl_STDINT_H
-if test $gl_cond_libtool = false; then
-  gl_ltlibdeps="$gl_ltlibdeps $LTLIBICONV"
-  gl_libdeps="$gl_libdeps $LIBICONV"
-fi
-gl_HEADER_STRING_H
-gl_FUNC_STRVERSCMP
-if test $HAVE_STRVERSCMP = 0; then
-  AC_LIBOBJ([strverscmp])
-  gl_PREREQ_STRVERSCMP
-fi
-gl_STRING_MODULE_INDICATOR([strverscmp])
-gl_LIBUNISTRING_LIBHEADER([0.9.2], [unistr.h])
-gl_MODULE_INDICATOR([unistr/u8-mbtoucr])
-gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-mbtoucr])
-gl_MODULE_INDICATOR([unistr/u8-uctomb])
-gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-uctomb])
-gl_LIBUNISTRING_LIBHEADER([0.9], [unitypes.h])
+  AC_REQUIRE([gl_EXTERN_INLINE])
+  AC_SUBST([LIBINTL])
+  AC_SUBST([LTLIBINTL])
+  AM_ICONV
+  m4_ifdef([gl_ICONV_MODULE_INDICATOR],
+    [gl_ICONV_MODULE_INDICATOR([iconv])])
+  gl_ICONV_H
+  gl_FUNC_ICONV_OPEN
+  if test $REPLACE_ICONV_OPEN = 1; then
+    AC_LIBOBJ([iconv_open])
+  fi
+  if test $REPLACE_ICONV = 1; then
+    AC_LIBOBJ([iconv])
+    AC_LIBOBJ([iconv_close])
+  fi
+  gl_INLINE
+  gl_LD_OUTPUT_DEF
+  gl_LD_VERSION_SCRIPT
+  gl_VISIBILITY
+  gl_MULTIARCH
+  AM_STDBOOL_H
+  gl_STDDEF_H
+  gl_STDINT_H
+  if test $gl_cond_libtool = false; then
+    gl_ltlibdeps="$gl_ltlibdeps $LTLIBICONV"
+    gl_libdeps="$gl_libdeps $LIBICONV"
+  fi
+  gl_HEADER_STRING_H
+  gl_FUNC_STRVERSCMP
+  if test $HAVE_STRVERSCMP = 0; then
+    AC_LIBOBJ([strverscmp])
+    gl_PREREQ_STRVERSCMP
+  fi
+  gl_STRING_MODULE_INDICATOR([strverscmp])
+  gl_LIBUNISTRING_LIBHEADER([0.9.2], [unistr.h])
+  gl_MODULE_INDICATOR([unistr/u8-mbtoucr])
+  gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-mbtoucr])
+  gl_MODULE_INDICATOR([unistr/u8-uctomb])
+  gl_LIBUNISTRING_MODULE([0.9], [unistr/u8-uctomb])
+  gl_LIBUNISTRING_LIBHEADER([0.9], [unitypes.h])
   # End of code from modules
   m4_ifval(lgl_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([lgl_LIBSOURCES_DIR])[ ||
@@ -223,61 +225,63 @@ changequote([, ])dnl
   AC_SUBST([lgltests_WITNESS])
   gl_module_indicator_condition=$lgltests_WITNESS
   m4_pushdef([gl_MODULE_INDICATOR_CONDITION], [$gl_module_indicator_condition])
-gl_FUNC_ALLOCA
-gt_LOCALE_FR
-gt_LOCALE_TR_UTF8
-gl_ENVIRON
-gl_UNISTD_MODULE_INDICATOR([environ])
-gl_INTTYPES_H
-gl_INTTYPES_INCOMPLETE
-gl_LOCALE_H
-AC_CHECK_FUNCS_ONCE([newlocale])
-gl_LOCALENAME
-AC_CHECK_FUNCS_ONCE([newlocale])
-gl_LOCK
-gl_FUNC_MALLOC_POSIX
-if test $REPLACE_MALLOC = 1; then
-  AC_LIBOBJ([malloc])
-fi
-gl_STDLIB_MODULE_INDICATOR([malloc-posix])
-gl_MALLOCA
-gl_FUNC_PUTENV
-if test $REPLACE_PUTENV = 1; then
-  AC_LIBOBJ([putenv])
-fi
-gl_STDLIB_MODULE_INDICATOR([putenv])
-gl_FUNC_SETENV
-if test $HAVE_SETENV = 0 || test $REPLACE_SETENV = 1; then
-  AC_LIBOBJ([setenv])
-fi
-gl_STDLIB_MODULE_INDICATOR([setenv])
-gl_FUNC_SETLOCALE
-if test $REPLACE_SETLOCALE = 1; then
-  AC_LIBOBJ([setlocale])
-  gl_PREREQ_SETLOCALE
-fi
-gl_LOCALE_MODULE_INDICATOR([setlocale])
-gt_LOCALE_FR
-gt_LOCALE_FR_UTF8
-gt_LOCALE_JA
-gt_LOCALE_ZH_CN
-gt_TYPE_SSIZE_T
-gt_TYPE_WCHAR_T
-gt_TYPE_WINT_T
-gl_STDLIB_H
-gl_SYS_TYPES_H
-AC_PROG_MKDIR_P
-gl_THREAD
-gl_THREADLIB
-gl_UNISTD_H
-gl_FUNC_UNSETENV
-if test $HAVE_UNSETENV = 0 || test $REPLACE_UNSETENV = 1; then
-  AC_LIBOBJ([unsetenv])
-  gl_PREREQ_UNSETENV
-fi
-gl_STDLIB_MODULE_INDICATOR([unsetenv])
-gl_WCHAR_H
-gl_YIELD
+  gl_FUNC_ALLOCA
+  gt_LOCALE_FR
+  gt_LOCALE_TR_UTF8
+  gl_ENVIRON
+  gl_UNISTD_MODULE_INDICATOR([environ])
+  gl_INTTYPES_H
+  gl_INTTYPES_INCOMPLETE
+  gl_LOCALE_H
+  AC_CHECK_FUNCS_ONCE([newlocale])
+  gl_LOCALENAME
+  AC_CHECK_FUNCS_ONCE([newlocale])
+  gl_LOCK
+  gl_MODULE_INDICATOR([lock])
+  gl_FUNC_MALLOC_POSIX
+  if test $REPLACE_MALLOC = 1; then
+    AC_LIBOBJ([malloc])
+  fi
+  gl_STDLIB_MODULE_INDICATOR([malloc-posix])
+  gl_MALLOCA
+  gl_FUNC_PUTENV
+  if test $REPLACE_PUTENV = 1; then
+    AC_LIBOBJ([putenv])
+    gl_PREREQ_PUTENV
+  fi
+  gl_STDLIB_MODULE_INDICATOR([putenv])
+  gl_FUNC_SETENV
+  if test $HAVE_SETENV = 0 || test $REPLACE_SETENV = 1; then
+    AC_LIBOBJ([setenv])
+  fi
+  gl_STDLIB_MODULE_INDICATOR([setenv])
+  gl_FUNC_SETLOCALE
+  if test $REPLACE_SETLOCALE = 1; then
+    AC_LIBOBJ([setlocale])
+    gl_PREREQ_SETLOCALE
+  fi
+  gl_LOCALE_MODULE_INDICATOR([setlocale])
+  gt_LOCALE_FR
+  gt_LOCALE_FR_UTF8
+  gt_LOCALE_JA
+  gt_LOCALE_ZH_CN
+  gt_TYPE_SSIZE_T
+  AC_REQUIRE([gt_TYPE_WCHAR_T])
+  AC_REQUIRE([gt_TYPE_WINT_T])
+  gl_STDLIB_H
+  gl_SYS_TYPES_H
+  AC_PROG_MKDIR_P
+  gl_THREAD
+  gl_THREADLIB
+  gl_UNISTD_H
+  gl_FUNC_UNSETENV
+  if test $HAVE_UNSETENV = 0 || test $REPLACE_UNSETENV = 1; then
+    AC_LIBOBJ([unsetenv])
+    gl_PREREQ_UNSETENV
+  fi
+  gl_STDLIB_MODULE_INDICATOR([unsetenv])
+  gl_WCHAR_H
+  gl_YIELD
   m4_popdef([gl_MODULE_INDICATOR_CONDITION])
   m4_ifval(lgltests_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([lgltests_LIBSOURCES_DIR])[ ||
@@ -409,6 +413,7 @@ AC_DEFUN([lgl_FILE_LIST], [
   m4/eealloc.m4
   m4/environ.m4
   m4/extensions.m4
+  m4/extern-inline.m4
   m4/gnulib-common.m4
   m4/iconv.m4
   m4/iconv_h.m4
@@ -516,6 +521,7 @@ AC_DEFUN([lgl_FILE_LIST], [
   tests=lib/setlocale.c
   tests=lib/stdlib.in.h
   tests=lib/sys_types.in.h
+  tests=lib/unistd.c
   tests=lib/unistd.in.h
   tests=lib/unsetenv.c
   tests=lib/verify.h

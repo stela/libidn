@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2012 Simon Josefsson
+# Copyright (C) 2011-2013 Simon Josefsson
 #
 # This file is part of GNU Libidn.
 #
@@ -35,16 +35,16 @@ libidn4win64:
 
 doit:
 	rm -rf tmp$(ARCH) && mkdir tmp$(ARCH) && cd tmp$(ARCH) && \
-	cp ../../libiconv-1.13.1.tar.gz . || wget ftp://ftp.gnu.org/gnu/libiconv/libiconv-1.13.1.tar.gz && \
-	tar xfa libiconv-1.13.1.tar.gz && \
-	cd libiconv-1.13.1 && \
+	cp ../../libiconv-1.14.tar.gz . || wget ftp://ftp.gnu.org/gnu/libiconv/libiconv-1.14.tar.gz && \
+	tar xfa libiconv-1.14.tar.gz && \
+	cd libiconv-1.14 && \
 	./configure --host=$(HOST) --build=x86_64-unknown-linux-gnu --prefix=$(PWD)/tmp$(ARCH)/root && \
 	make install && \
 	cd .. && \
 	cp ../../$(TGZ) . || wget $(URL) && \
 	tar xfa $(TGZ) && \
 	cd $(distdir) && \
-	./configure --host=$(HOST) --build=x86_64-unknown-linux-gnu --prefix=$(PWD)/tmp$(ARCH)/root CPPFLAGS=-I$(PWD)/tmp$(ARCH)/root/include && \
+	./configure --host=$(HOST) --build=x86_64-unknown-linux-gnu --prefix=$(PWD)/tmp$(ARCH)/root CPPFLAGS=-I$(PWD)/tmp$(ARCH)/root/include --disable-csharp && \
 	make install && \
 	make -C tests $(CHECK) && \
 	cd .. && \

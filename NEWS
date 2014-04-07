@@ -1,14 +1,54 @@
 Libidn NEWS -- History of user-visible changes.                 -*- outline -*-
-Copyright (C) 2002-2012 Simon Josefsson
+Copyright (C) 2002-2013 Simon Josefsson
 See the end for copying conditions.
 
-* Version 1.26 (unreleased) [stable]
+* Version 1.29 (unreleased) [stable]
+
+** libidn: Mark internal variable "g_utf8_skip" as static.
+Reported by Thomas Dineen <tdineen@ix.netcom.com>.
+
+** idn: Flush stdout to simplify for tools that buffer too heavily.
+Tiny patch from Hugh Daschbach <hugh@ccss.com>.
+
+** Update gnulib files.
+
+** API and ABI is backwards compatible with the previous version.
+
+* Version 1.28 (released 2013-07-10) [stable]
+
+** idn: Don't crash when string conversion from UTF-8 to locale fails.
+Reported by Jeffrey Frey <frey@udel.edu>.
+
+** java: Fix build failures.
+
+** java: TestIDNA -a and -u logic was reversed, now fixed.
+
+** API and ABI is backwards compatible with the previous version.
+
+* Version 1.27 (released 2013-06-05) [stable]
+
+** Java library can be built using Maven.  Speed improvements.
+Thanks to several patches from Stefan Larsson.  Testing indicate 70-90
+times faster node/name/resource-prep.
+
+** Update gnulib files and translations.
+
+** API and ABI is backwards compatible with the previous version.
+
+* Version 1.26 (released 2012-12-11) [stable]
 
 ** libidn, idna_to_ascii: Propagate error on malloc failure.
 Reported by Sarat Chandra Addepalli <s.addepalli@samsung.com>.
 
+** libidn, tld_get_4: Fix out of bounds read access violation.
+
 ** i18n: Added Croatian translation.  Updated Vietnamese translation.
 Thanks to Tomislav Krznar and Trần Ngọc Quân.
+
+** java: Permit usage by Apache projects.
+Thanks to Oliver Hitz and Angus Turner.
+
+** tests: Improve tld self-tests.
 
 ** API and ABI is backwards compatible with the previous version.
 

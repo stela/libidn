@@ -1,6 +1,6 @@
 /* tld.c --- Declarations for TLD restriction checking.
-   Copyright (C) 2004-2012 Simon Josefsson.
-   Copyright (C) 2003-2012 Free Software Foundation, Inc.
+   Copyright (C) 2004-2013 Simon Josefsson.
+   Copyright (C) 2003-2013 Free Software Foundation, Inc.
 
    Author: Thomas Jacob, Internet24.de
 
@@ -135,8 +135,9 @@ tld_get_4 (const uint32_t * in, size_t inlen, char **out)
 			(*ipos >= 0x61 && *ipos <= 0x7A)))
     ipos--, olen++;
 
-  if (olen > 0 && DOTP (*ipos))	/* Found something that appears a TLD. */
+  if (olen > 0 && ipos >= in && DOTP (*ipos))
     {
+      /* Found something that appears a TLD. */
       char *out_s = malloc (sizeof (char) * (olen + 1));
       char *opos = out_s;
 

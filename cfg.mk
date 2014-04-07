@@ -1,4 +1,4 @@
-# Copyright (C) 2006-2012 Simon Josefsson
+# Copyright (C) 2006-2013 Simon Josefsson
 #
 # This file is part of GNU Libidn.
 #
@@ -46,10 +46,8 @@ autoreconf: doc/Makefile.gdoc
 	for f in po/*.po.in; do \
 		cp $$f `echo $$f | sed 's/.in//'`; \
 	done
-	mv build-aux/config.rpath build-aux/config.rpath-
 	touch ChangeLog
 	test -f ./configure || autoreconf --install
-	mv build-aux/config.rpath- build-aux/config.rpath
 
 update-po: refresh-po
 	for f in `ls po/*.po | grep -v quot.po`; do \
@@ -112,9 +110,8 @@ cyclo-upload:
 	cd $(htmldir) && cvs commit -m "Update." cyclo/index.html
 
 gendoc-copy:
-	cd doc && env MAKEINFO="makeinfo -I ../examples" \
-		      TEXI2DVI="texi2dvi -I ../examples" \
-		$(SHELL) ../build-aux/gendocs.sh \
+	cd doc && $(SHELL) ../build-aux/gendocs.sh -I ../examples -I . \
+		--email $(PACKAGE_BUGREPORT) \
 		--html "--css-include=texinfo.css" \
 		-o ../$(htmldir)/manual/ $(PACKAGE) "$(PACKAGE_NAME)"
 
@@ -122,7 +119,8 @@ gendoc-upload:
 	cd $(htmldir) && \
 		cvs add manual || true && \
 		cvs add manual/html_node || true && \
-		cvs add -kb manual/*.gz manual/*.pdf || true && \
+		cvs add -kb manual/*.gz manual/*.pdf \
+			manual/html_node/*.png || true && \
 		cvs add manual/*.txt manual/*.html \
 			manual/html_node/*.html || true && \
 		cvs commit -m "Update." manual/
@@ -156,6 +154,9 @@ doxygen-copy:
 
 doxygen-upload:
 	cd $(htmldir) && \
+		cvs add doxygen || true && \
+		cvs add -kb doxygen/*.png || true && \
+		cvs add doxygen/*.js doxygen/*.html || true && \
 		cvs commit -m "Update." doxygen/
 
 ChangeLog:

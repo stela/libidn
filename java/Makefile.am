@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-# Copyright (C) 2004-2012 Simon Josefsson
+# Copyright (C) 2004-2013 Simon Josefsson
 #
 # This file is part of GNU Libidn.
 #
@@ -17,6 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = src
+
+EXTRA_DIST = LICENSE-2.0.txt
+
 INSTALL_TARGETS =
 
 if JAVA
@@ -25,23 +28,40 @@ dist_libidn_jar_DATA = libidn-$(VERSION).jar
 
 libidn-$(VERSION).jar:
 	$(JAR) cf $@ \
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/CombiningClass.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/Composition.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/DecompositionKeys.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/DecompositionMappings.class	\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/IDNA.class			\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/IDNAException.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/NFKC.class			\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/Punycode.class			\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/PunycodeException.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RFC3454.class			\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet.class			\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$1.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$Builder.class	\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$Range.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/RangeSet\$$RangeContainsComparator.class \
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/Stringprep.class		\
-		-C $(top_builddir)/java/src/main/java gnu/inet/encoding/StringprepException.class
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/CombiningClass.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/Composition.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/DecompositionKeys.class	\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/DecompositionMappings.class	\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/IDNA.class			\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/IDNAException.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/NFKC.class			\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/Punycode.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/PunycodeException.class	\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/RangeSet\$$1.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/RangeSet\$$Builder.class	\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/RangeSet.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/RangeSet\$$Range.class	\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/RangeSet\$$RangeContainsComparator.class \
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/RFC3454.class			\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/Stringprep.class		\
+		-C $(builddir)/src/main/java \
+			gnu/inet/encoding/StringprepException.class
 
 INSTALL_TARGETS += install-jar
 install-jar:

@@ -1,5 +1,5 @@
 Libidn AUTHORS -- Information about the authors.
-Copyright (C) 2002-2012 Simon Josefsson
+Copyright (C) 2002-2013 Simon Josefsson
 See the end for copying conditions.
 
 Simon Josefsson <simon@josefsson.org>
@@ -10,6 +10,9 @@ Contributed TLD support.
 
 Oliver Hitz <oliver@net-track.ch>
 Contributed Java implementation.
+
+Stefan Larsson <stefan@larsson.nu>
+Optimized Java implementation.  Added Maven support.
 
 Alexander Gnauck <gnauck@ag-software.de>
 Contributed C# port.
