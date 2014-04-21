@@ -6,9 +6,13 @@ package gnu.inet.encoding;
 /**
  * Auto-generated class containing Unicode NFKC tables.
  */
-public class DecompositionMappings
-{
-  public final static String[] m = new String[] {
+public class DecompositionMappings {
+  private DecompositionMappings() {
+    // prevent construction
+  }
+
+  /** Decomposition mappings. */
+  public static final String[] MAPPINGS = new String[] {
     "\u0020",
     "\u0020\u0308",
     "\u0061",

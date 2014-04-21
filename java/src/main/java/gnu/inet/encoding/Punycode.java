@@ -38,27 +38,29 @@ package gnu.inet.encoding;
  * Note that this implementation only supports 16-bit Unicode code
  * points.
  */
-public class Punycode
-{
+public class Punycode {
+  private Punycode() {
+    // prevent construction
+  }
+
   /* Punycode parameters */
-  final static int TMIN = 1;
-  final static int TMAX = 26;
-  final static int BASE = 36;
-  final static int INITIAL_N = 128;
-  final static int INITIAL_BIAS = 72;
-  final static int DAMP = 700;
-  final static int SKEW = 38;
-  final static char DELIMITER = '-';
+  private static final int TMIN = 1;
+  private static final int TMAX = 26;
+  private static final int BASE = 36;
+  private static final int INITIAL_N = 128;
+  private static final int INITIAL_BIAS = 72;
+  private static final int DAMP = 700;
+  private static final int SKEW = 38;
+  private static final char DELIMITER = '-';
 
   /**
    * Punycodes a unicode string.
    *
    * @param input Unicode string.
    * @return Punycoded string.
+   * @throws PunycodeException if invalid input or overflow
    */
-  public static String encode(String input)
-    throws PunycodeException
-  {
+  public static String encode(final String input) throws PunycodeException {
     int n = INITIAL_N;
     int delta = 0;
     int bias = INITIAL_BIAS;
@@ -69,8 +71,8 @@ public class Punycode
     for (int i = 0; i < input.length(); i++) {
       char c = input.charAt(i);
       if (isBasic(c)) {
-	output.append(c);
-	b++;
+        output.append(c);
+        b++;
       }
     }
 
@@ -85,50 +87,50 @@ public class Punycode
 
       // Find the minimum code point >= n
       for (int i = 0; i < input.length(); i++) {
-	int c = input.charAt(i);
-	if (c >= n && c < m) {
-	  m = c;
-	}
+        int c = input.charAt(i);
+        if (c >= n && c < m) {
+          m = c;
+        }
       }
 
       if (m - n > (Integer.MAX_VALUE - delta) / (h + 1)) {
-	throw new PunycodeException(PunycodeException.OVERFLOW);
+        throw new PunycodeException(PunycodeException.OVERFLOW);
       }
       delta = delta + (m - n) * (h + 1);
       n = m;
 
       for (int j = 0; j < input.length(); j++) {
-	int c = input.charAt(j);
-	if (c < n) {
-	  delta++;
-	  if (0 == delta) {
-	    throw new PunycodeException(PunycodeException.OVERFLOW);
-	  }
-	}
-	if (c == n) {
-	  int q = delta;
+        int c = input.charAt(j);
+        if (c < n) {
+          delta++;
+          if (0 == delta) {
+            throw new PunycodeException(PunycodeException.OVERFLOW);
+          }
+        }
+        if (c == n) {
+          int q = delta;
 
-	  for (int k = BASE;; k += BASE) {
-	    int t;
-	    if (k <= bias) {
-	      t = TMIN;
-	    } else if (k >= bias + TMAX) {
-	      t = TMAX;
-	    } else {
-	      t = k - bias;
-	    }
-	    if (q < t) {
-	      break;
-	    }
-	    output.append((char) digit2codepoint(t + (q - t) % (BASE - t)));
-	    q = (q - t) / (BASE - t);
-	  }
+          for (int k = BASE;; k += BASE) {
+            int t;
+            if (k <= bias) {
+              t = TMIN;
+            } else if (k >= bias + TMAX) {
+              t = TMAX;
+            } else {
+              t = k - bias;
+            }
+            if (q < t) {
+              break;
+            }
+            output.append((char) digit2codepoint(t + (q - t) % (BASE - t)));
+            q = (q - t) / (BASE - t);
+          }
 
-	  output.append((char) digit2codepoint(q));
-	  bias = adapt(delta, h + 1, h == b);
-	  delta = 0;
-	  h++;
-	}
+          output.append((char) digit2codepoint(q));
+          bias = adapt(delta, h + 1, h == b);
+          delta = 0;
+          h++;
+        }
       }
 
       delta++;
@@ -143,10 +145,9 @@ public class Punycode
    *
    * @param input Punycode string
    * @return Unicode string.
+   * @throws PunycodeException if overflow/bad input
    */
-  public static String decode(String input)
-    throws PunycodeException
-  {
+  public static String decode(final String input) throws PunycodeException {
     int n = INITIAL_N;
     int i = 0;
     int bias = INITIAL_BIAS;
@@ -155,11 +156,11 @@ public class Punycode
     int d = input.lastIndexOf(DELIMITER);
     if (d > 0) {
       for (int j = 0; j < d; j++) {
-	char c = input.charAt(j);
-	if (!isBasic(c)) {
-	  throw new PunycodeException(PunycodeException.BAD_INPUT);
-	}
-	output.append(c);
+        char c = input.charAt(j);
+        if (!isBasic(c)) {
+          throw new PunycodeException(PunycodeException.BAD_INPUT);
+        }
+        output.append(c);
       }
       d++;
     } else {
@@ -167,39 +168,39 @@ public class Punycode
     }
 
     while (d < input.length()) {
-      int oldi = i;
+      final int oldI = i;
       int w = 1;
 
-      for (int k = BASE; ; k += BASE) {
-	if (d == input.length()) {
-	  throw new PunycodeException(PunycodeException.BAD_INPUT);
-	}
-	int c = input.charAt(d++);
-	int digit = codepoint2digit(c);
-	if (digit > (Integer.MAX_VALUE - i) / w) {
-	  throw new PunycodeException(PunycodeException.OVERFLOW);
-	}
+      for (int k = BASE;; k += BASE) {
+        if (d == input.length()) {
+          throw new PunycodeException(PunycodeException.BAD_INPUT);
+        }
+        int c = input.charAt(d++);
+        int digit = codepoint2digit(c);
+        if (digit > (Integer.MAX_VALUE - i) / w) {
+          throw new PunycodeException(PunycodeException.OVERFLOW);
+        }
 
-	i = i + digit * w;
+        i = i + digit * w;
 
-	int t;
-	if (k <= bias) {
-	  t = TMIN;
-	} else if (k >= bias + TMAX) {
-	  t = TMAX;
-	} else {
-	  t = k - bias;
-	}
-	if (digit < t) {
-	  break;
-	}
-	w = w * (BASE - t);
+        int t;
+        if (k <= bias) {
+          t = TMIN;
+        } else if (k >= bias + TMAX) {
+          t = TMAX;
+        } else {
+          t = k - bias;
+        }
+        if (digit < t) {
+          break;
+        }
+        w = w * (BASE - t);
       }
 
-      bias = adapt(i - oldi, output.length()+1, oldi == 0);
+      bias = adapt(i - oldI, output.length() + 1, oldI == 0);
 
       if (i / (output.length() + 1) > Integer.MAX_VALUE - n) {
-	throw new PunycodeException(PunycodeException.OVERFLOW);
+        throw new PunycodeException(PunycodeException.OVERFLOW);
       }
 
       n = n + i / (output.length() + 1);
@@ -211,15 +212,24 @@ public class Punycode
     return output.toString();
   }
 
-  public final static int adapt(int delta, int numpoints, boolean first)
-  {
+  /**
+   * Delta bias adaptation.
+   * @param initialDelta delta
+   * @param numPoints total number of code points encoded/decoded so far
+   * @param first if first delta
+   * @return bias
+   * @see <a href="http://tools.ietf.org/html/rfc3492#section-3.4">RFC 3492 section 3.4</a>
+   *
+   */
+  public static int adapt(final int initialDelta, final int numPoints, final boolean first) {
+    int delta;
     if (first) {
-      delta = delta / DAMP;
+      delta = initialDelta / DAMP;
     } else {
-      delta = delta / 2;
+      delta = initialDelta / 2;
     }
 
-    delta = delta + (delta / numpoints);
+    delta = delta + (delta / numPoints);
 
     int k = 0;
     while (delta > ((BASE - TMIN) * TMAX) / 2) {
@@ -230,14 +240,23 @@ public class Punycode
     return k + ((BASE - TMIN + 1) * delta) / (delta + SKEW);
   }
 
-  public final static boolean isBasic(char c)
-  {
+  /**
+   * If the code point is a basic code point (0..0x7F).
+   * @param c code point
+   * @return {@code true} if basic, otherwise {@code false}
+   * @see <a href="http://tools.ietf.org/html/rfc3492#section-5">RFC 3492 section 5</a>
+   */
+  public static boolean isBasic(final char c) {
     return c < 0x80;
   }
 
-  public final static int digit2codepoint(int d)
-    throws PunycodeException
-  {
+  /**
+   * Converts digit values to code point.
+   * @param d digit value
+   * @return code point
+   * @throws PunycodeException if bad input
+   */
+  public static int digit2codepoint(final int d) throws PunycodeException {
     if (d < 26) {
       // 0..25 : 'a'..'z'
       return d + 'a';
@@ -249,9 +268,13 @@ public class Punycode
     }
   }
 
-  public final static int codepoint2digit(int c)
-    throws PunycodeException
-  {
+  /**
+   * Converts code points to digit values.
+   * @param c code point
+   * @return digit value
+   * @throws PunycodeException if bad input
+   */
+  public static int codepoint2digit(final int c) throws PunycodeException {
     if (c - '0' < 10) {
       // '0'..'9' : 26..35
       return c - '0' + 26;

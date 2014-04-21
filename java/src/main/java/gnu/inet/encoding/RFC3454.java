@@ -6,9 +6,12 @@ package gnu.inet.encoding;
 /**
  * Auto-generated class containing StringPrep mapping tables.
  */
-public class RFC3454
-{
-  final static char[][] A1 = new char[][] {
+public class RFC3454 {
+  private RFC3454() {
+    // prevent construction
+  }
+
+  static final char[][] A1 = new char[][] {
     new char[] { '\u0221' },
     new char[] { '\u0234', '\u024F' },
     new char[] { '\u02AE', '\u02AF' },
@@ -360,7 +363,7 @@ public class RFC3454
     new char[] { '\uFFEF', '\uFFF8' },
   };
 
-  final static char[] B1 = new char[] {
+  static final char[] B1 = new char[] {
     '\u00AD',
     '\u034F',
     '\u1806',
@@ -390,7 +393,7 @@ public class RFC3454
     '\uFEFF',
   };
 
-  final static char[] B2search = new char[] {
+  static final char[] B2_SEARCH = new char[] {
     '\u0041',
     '\u0042',
     '\u0043',
@@ -1278,7 +1281,7 @@ public class RFC3454
     '\uFF3A',
   };
 
-  final static String[] B2replace = new String[] {
+  static final String[] B2_REPLACE = new String[] {
     "\u0061",
     "\u0062",
     "\u0063",
@@ -2166,7 +2169,7 @@ public class RFC3454
     "\uFF5A",
   };
 
-  final static char[] B3search = new char[] {
+  static final char[] B3_SEARCH = new char[] {
     '\u0041',
     '\u0042',
     '\u0043',
@@ -2969,7 +2972,7 @@ public class RFC3454
     '\uFF3A',
   };
 
-  final static String[] B3replace = new String[] {
+  static final String[] B3_REPLACE = new String[] {
     "\u0061",
     "\u0062",
     "\u0063",
@@ -3772,11 +3775,11 @@ public class RFC3454
     "\uFF5A",
   };
 
-  final static char[] C11 = new char[] {
+  static final char[] C11 = new char[] {
     '\u0020',
   };
 
-  final static char[] C12 = new char[] {
+  static final char[] C12 = new char[] {
     '\u00A0',
     '\u1680',
     '\u2000',
@@ -3796,12 +3799,12 @@ public class RFC3454
     '\u3000',
   };
 
-  final static char[][] C21 = new char[][] {
+  static final char[][] C21 = new char[][] {
     new char[] { '\u0000', '\u001F' },
     new char[] { '\u007F' },
   };
 
-  final static char[][] C22 = new char[][] {
+  static final char[][] C22 = new char[][] {
     new char[] { '\u0080', '\u009F' },
     new char[] { '\u06DD' },
     new char[] { '\u070F' },
@@ -3819,20 +3822,20 @@ public class RFC3454
     new char[] { '\uFFF9', '\uFFFC' },
   };
 
-  final static char[][] C3 = new char[][] {
+  static final char[][] C3 = new char[][] {
     new char[] { '\uE000', '\uF8FF' },
   };
 
-  final static char[][] C4 = new char[][] {
+  static final char[][] C4 = new char[][] {
     new char[] { '\uFDD0', '\uFDEF' },
     new char[] { '\uFFFE', '\uFFFF' },
   };
 
-  final static char[][] C5 = new char[][] {
+  static final char[][] C5 = new char[][] {
     new char[] { '\uD800', '\uDFFF' },
   };
 
-  final static char[][] C6 = new char[][] {
+  static final char[][] C6 = new char[][] {
     new char[] { '\uFFF9' },
     new char[] { '\uFFFA' },
     new char[] { '\uFFFB' },
@@ -3840,11 +3843,11 @@ public class RFC3454
     new char[] { '\uFFFD' },
   };
 
-  final static char[][] C7 = new char[][] {
+  static final char[][] C7 = new char[][] {
     new char[] { '\u2FF0', '\u2FFB' },
   };
 
-  final static char[][] C8 = new char[][] {
+  static final char[][] C8 = new char[][] {
     new char[] { '\u0340' },
     new char[] { '\u0341' },
     new char[] { '\u200E' },
@@ -3862,7 +3865,7 @@ public class RFC3454
     new char[] { '\u206F' },
   };
 
-  final static char[][] D1 = new char[][] {
+  static final char[][] D1 = new char[][] {
     new char[] { '\u05BE' },
     new char[] { '\u05C0' },
     new char[] { '\u05C3' },
@@ -3899,7 +3902,7 @@ public class RFC3454
     new char[] { '\uFE76', '\uFEFC' },
   };
 
-  final static char[][] D2 = new char[][] {
+  static final char[][] D2 = new char[][] {
     new char[] { '\u0041', '\u005A' },
     new char[] { '\u0061', '\u007A' },
     new char[] { '\u00AA' },

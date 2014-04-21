@@ -6,9 +6,13 @@ package gnu.inet.encoding;
 /**
  * Auto-generated class containing Unicode NFKC tables.
  */
-public class DecompositionKeys
-{
-  public final static int[] k = new int[] {
+public class DecompositionKeys {
+  private DecompositionKeys() {
+    // avoid construction
+  }
+
+  /** Decomposition keys. */
+  public static final int[] KEYS = new int[] {
     '\u00A0', 0,
     '\u00A8', 1,
     '\u00AA', 2,

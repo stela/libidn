@@ -35,23 +35,31 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.StringTokenizer;
 
-public class TestIDNA
-{
-  final static int STATE_SCAN = 0;
-  final static int STATE_INPUT = 1;
+/**
+ * Tests IDNA conversion implementation against test vectors.
+ */
+public class TestIDNA {
+  private static final int STATE_SCAN = 0;
+  private static final int STATE_INPUT = 1;
 
-  public static void usage()
-  {
-    System.err.println("Usage: "+TestIDNA.class.toString()+" [-a|-u string] [-t]");
+  private TestIDNA() {
+    // prevent construction
+  }
+
+  private static void usage() {
+    System.err.println("Usage: " + TestIDNA.class.toString() + " [-a|-u string] [-t]");
     System.err.println("       -a string: apply toASCII(string)");
     System.err.println("       -u string: apply toUnicode(string)");
     System.err.println("       -t: automatic test using draft-josefsson-idn-test-vectors.html");
     System.exit(1);
   }
 
-  public static void main(String[] args)
-    throws Exception
-  {
+  /**
+   * Main method.
+   * @param args command line argument(s)
+   * @throws Exception if error
+   */
+  public static void main(final String[] args) throws Exception {
       String[] tests = new String[] {
 	  "domain\u3002invalid",
 	  "domain\uFF0Einvalid",
@@ -66,12 +74,12 @@ public class TestIDNA
 
       if (args.length == 2) {
       if (args[0].equals("-u")) {
-	  System.out.println("Input: "+args[1]);
-	  System.out.println("Output: "+IDNA.toUnicode(args[1]));
+	  System.out.println("Input: " + args[1]);
+	  System.out.println("Output: " + IDNA.toUnicode(args[1]));
       } else if (args[0].equals("-a")) {
 	  try {
-	      System.out.println("Input: "+args[1]);
-	      System.out.println("Output: "+IDNA.toASCII(args[1]));
+	      System.out.println("Input: " + args[1]);
+	      System.out.println("Output: " + IDNA.toASCII(args[1]));
 	  } catch (IDNAException e) {
 	      System.out.println(e);
 	  }
@@ -106,41 +114,43 @@ public class TestIDNA
 	    input = new StringBuilder();
 	  }
 	  break;
+
 	case STATE_INPUT:
-	  if (l.equals("")) {
-	    // Empty line (before "out:")
-	  } else if (l.startsWith("out: ")) {
-	    out = l.substring(5).trim();
+          if (!"".equals(l)) {
+            if (l.startsWith("out: ")) {
+              out = l.substring(5).trim();
 
-	    try {
-	      String ascii = IDNA.toASCII(input.toString());
-	      if (ascii.equals(out)) {
-		// Ok
-	      } else {
-		System.err.println("Error detected:");
-		System.err.println("  Input: "+input);
-		System.err.println("  toASCII returned: "+ascii);
-		System.err.println("  expected result: "+out);
-		System.exit(1);
-	      }
-	    } catch (IDNAException e) {
-	      System.out.println(" exception thrown ("+e+")");
-	    }
+              try {
+                String ascii = IDNA.toASCII(input.toString());
+                if (!out.equals(ascii)) {
+                  System.err.println("Error detected:");
+                  System.err.println("  Input: " + input);
+                  System.err.println("  toASCII returned: " + ascii);
+                  System.err.println("  expected result: " + out);
+                  System.exit(1);
+                } // else Ok
+              } catch (IDNAException e) {
+                System.out.println(" exception thrown (" + e + ")");
+              }
 
-	    state = STATE_SCAN;
-	  } else {
-	    StringTokenizer tok = new StringTokenizer(l.trim(), " ");
-	    while (tok.hasMoreTokens()) {
-	      String t = tok.nextToken();
-	      if (t.startsWith("U+")) {
-		char u = (char) Integer.parseInt(t.substring(2, 6), 16);
-		input.append(u);
-	      } else {
-		System.err.println("Unknown token: "+t);
-	      }
-	    }
-	  }
-	  break;
+              state = STATE_SCAN;
+            } else {
+              StringTokenizer tok = new StringTokenizer(l.trim(), " ");
+              while (tok.hasMoreTokens()) {
+                String t = tok.nextToken();
+                if (t.startsWith("U+")) {
+                  char u = (char) Integer.parseInt(t.substring(2, 6), 16);
+                  input.append(u);
+                } else {
+                  System.err.println("Unknown token: " + t);
+                }
+              }
+            }
+          } // else Empty line (before "out:")
+          break;
+
+          default:
+            throw new IllegalStateException("unexpected state");
 	}
       }
 

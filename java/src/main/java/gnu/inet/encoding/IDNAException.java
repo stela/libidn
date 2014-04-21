@@ -32,26 +32,37 @@ package gnu.inet.encoding;
 /**
  * Exception handling for IDNA class.
  */
-public class IDNAException
-  extends Exception
-{
-  public static String CONTAINS_NON_LDH = "Contains non-LDH characters.";
-  public static String CONTAINS_HYPHEN = "Leading or trailing hyphen not allowed.";
-  public static String CONTAINS_ACE_PREFIX = "ACE prefix (xn--) not allowed.";
-  public static String TOO_LONG = "String too long.";
+public class IDNAException extends Exception {
+  /** Non-LDH characters. */
+  public static final String CONTAINS_NON_LDH = "Contains non-LDH characters.";
+  /** Hyphen not allowed. */
+  public static final String CONTAINS_HYPHEN = "Leading or trailing hyphen not allowed.";
+  /** ACE prefix not allowed. */
+  public static final String CONTAINS_ACE_PREFIX = "ACE prefix (xn--) not allowed.";
+  /** String too long. */
+  public static final String TOO_LONG = "String too long.";
 
-  public IDNAException(String m)
-  {
+  /**
+   * Constructor.
+   * @param m message
+   */
+  public IDNAException(final String m) {
     super(m);
   }
 
-  public IDNAException(StringprepException e)
-  {
+  /**
+   * Constructor.
+   * @param e cause
+   */
+  public IDNAException(final StringprepException e) {
     super(e);
   }
 
-  public IDNAException(PunycodeException e)
-  {
+  /**
+   * Constructor.
+   * @param e cause
+   */
+  public IDNAException(final PunycodeException e) {
     super(e);
   }
 }
