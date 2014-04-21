@@ -96,22 +96,16 @@
             <version>2.12</version>
             <executions>
                 <execution>
-                    <id>validate</id>
-                    <phase>validate</phase>
-                    <configuration>
-                        <consoleOutput>true</consoleOutput>
-                        <failsOnError>true</failsOnError>
-                      <checkstyleRules>
-                        <module name="JavadocType">
-                           <property name="scope" value="public"/>
-                        </module>
-                      </checkstyleRules>
-                    </configuration>
                     <goals>
                         <goal>check</goal>
                     </goals>
                 </execution>
             </executions>
+            <configuration>
+                <configLocation>checkstyle_checks.xml</configLocation>
+                <consoleOutput>true</consoleOutput>
+                <failsOnError>true</failsOnError>
+            </configuration>
         </plugin>
     </plugins>
   </build>
