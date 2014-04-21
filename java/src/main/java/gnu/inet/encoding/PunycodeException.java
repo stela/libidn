@@ -32,19 +32,18 @@ package gnu.inet.encoding;
 /**
  * Exception handling for Punycode class.
  */
-public class PunycodeException
-  extends Exception
-{
-  public static String OVERFLOW = "Overflow.";
-  public static String BAD_INPUT = "Bad input.";
+public class PunycodeException extends Exception {
+  /** Message if overflow. */
+  public static final String OVERFLOW = "Overflow.";
+  /** Message if input. */
+  public static final String BAD_INPUT = "Bad input.";
 
   /**
    * Creates a new PunycodeException.
    *
    * @param m message.
    */
-  public PunycodeException(String m)
-  {
+  public PunycodeException(final String m) {
     super(m);
   }
 }

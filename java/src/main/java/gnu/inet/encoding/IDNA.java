@@ -38,9 +38,13 @@ package gnu.inet.encoding;
  * Note that this implementation only supports 16-bit Unicode code
  * points.
  */
-public class IDNA
-{
-  public final static String ACE_PREFIX = "xn--";
+public class IDNA {
+  /** ASCII Compatible Encoding (ACE) prefix. */
+  public static final String ACE_PREFIX = "xn--";
+
+  private IDNA() {
+    // prevent construction
+  }
 
   /**
    * Converts a Unicode string to ASCII using the procedure in RFC3490
@@ -50,21 +54,20 @@ public class IDNA
    *
    * @param input Unicode string.
    * @return Encoded string.
+   * @throws IDNAException if unallowed input
    */
-  public static String toASCII(String input)
-    throws IDNAException
-  {
+  public static String toASCII(final String input) throws IDNAException {
     StringBuilder o = new StringBuilder();
     StringBuilder h = new StringBuilder();
 
     for (int i = 0; i < input.length(); i++) {
       char c = input.charAt(i);
       if (c == '.' || c == '\u3002' || c == '\uff0e' || c == '\uff61') {
-	o.append(toASCII(h.toString(), false, true));
-	o.append('.');
-	h = new StringBuilder();
+        o.append(toASCII(h.toString(), false, true));
+        o.append('.');
+        h = new StringBuilder();
       } else {
-	h.append(c);
+        h.append(c);
       }
     }
     o.append(toASCII(h.toString(), false, true));
@@ -76,24 +79,24 @@ public class IDNA
    * section 4.1. Unassigned characters are not allowed and STD3 ASCII
    * rules are enforced.
    *
-   * @param input Unicode string.
+   * @param inputParm Unicode string.
    * @param allowUnassigned Unassigned characters, allowed or not?
    * @param useSTD3ASCIIRules STD3 ASCII rules, enforced or not?
    * @return Encoded string.
+   * @throws IDNAException if unallowed input
    */
-  public static String toASCII(String input, boolean allowUnassigned, boolean useSTD3ASCIIRules)
-    throws IDNAException
-  {
+  public static String toASCII(final String inputParm, final boolean allowUnassigned, final boolean useSTD3ASCIIRules)
+    throws IDNAException {
     // Step 1: Check if the string contains code points outside
     //         the ASCII range 0..0x7c.
-
+    String input = inputParm;
     boolean nonASCII = false;
 
     for (int i = 0; i < input.length(); i++) {
       int c = input.charAt(i);
       if (c > 0x7f) {
-	nonASCII = true;
-	break;
+        nonASCII = true;
+        break;
       }
     }
 
@@ -101,9 +104,9 @@ public class IDNA
 
     if (nonASCII) {
       try {
-	input = Stringprep.nameprep(input, allowUnassigned);
+        input = Stringprep.nameprep(input, allowUnassigned);
       } catch (StringprepException e) {
-	throw new IDNAException(e);
+        throw new IDNAException(e);
       }
     }
 
@@ -115,18 +118,18 @@ public class IDNA
 
     if (useSTD3ASCIIRules) {
       for (int i = 0; i < input.length(); i++) {
-	int c = input.charAt(i);
-	if ((c <= 0x2c) ||
-	    (c >= 0x2e && c <= 0x2f) ||
-	    (c >= 0x3a && c <= 0x40) ||
-	    (c >= 0x5b && c <= 0x60) ||
-	    (c >= 0x7b && c <= 0x7f)) {
-	  throw new IDNAException(IDNAException.CONTAINS_NON_LDH);
-	}
+        int c = input.charAt(i);
+        if ((c <= 0x2c)
+            || (c >= 0x2e && c <= 0x2f)
+            || (c >= 0x3a && c <= 0x40)
+            || (c >= 0x5b && c <= 0x60)
+            || (c >= 0x7b && c <= 0x7f)) {
+          throw new IDNAException(IDNAException.CONTAINS_NON_LDH);
+        }
       }
 
       if (input.startsWith("-") || input.endsWith("-")) {
-	throw new IDNAException(IDNAException.CONTAINS_HYPHEN);
+        throw new IDNAException(IDNAException.CONTAINS_HYPHEN);
       }
     }
 
@@ -137,8 +140,8 @@ public class IDNA
     for (int i = 0; i < input.length(); i++) {
       int c = input.charAt(i);
       if (c > 0x7f) {
-	nonASCII = true;
-	break;
+        nonASCII = true;
+        break;
       }
     }
 
@@ -149,15 +152,15 @@ public class IDNA
       // Step 5: Verify that the sequence does not begin with the ACE prefix.
 
       if (input.startsWith(ACE_PREFIX)) {
-	throw new IDNAException(IDNAException.CONTAINS_ACE_PREFIX);
+        throw new IDNAException(IDNAException.CONTAINS_ACE_PREFIX);
       }
 
       // Step 6: Punycode
 
       try {
-	output = Punycode.encode(input);
+        output = Punycode.encode(input);
       } catch (PunycodeException e) {
-	throw new IDNAException(e);
+        throw new IDNAException(e);
       }
 
       // Step 7: Prepend the ACE prefix.
@@ -182,19 +185,18 @@ public class IDNA
    * @param input ASCII input string.
    * @return Unicode string.
    */
-  public static String toUnicode(String input)
-  {
+  public static String toUnicode(final String input) {
     StringBuilder o = new StringBuilder();
     StringBuilder h = new StringBuilder();
 
     for (int i = 0; i < input.length(); i++) {
       char c = input.charAt(i);
       if (c == '.' || c == '\u3002' || c == '\uff0e' || c == '\uff61') {
-	o.append(toUnicode(h.toString(), false, true));
-	o.append(c);
-	h = new StringBuilder();
+        o.append(toUnicode(h.toString(), false, true));
+        o.append(c);
+        h = new StringBuilder();
       } else {
-	h.append(c);
+        h.append(c);
       }
     }
     o.append(toUnicode(h.toString(), false, true));
@@ -204,14 +206,16 @@ public class IDNA
   /**
    * Converts an ASCII-encoded string to Unicode.
    *
-   * @param input ASCII input string.
+   * @param inputParm ASCII input string.
    * @param allowUnassigned Allow unassigned Unicode characters.
    * @param useSTD3ASCIIRules Check that the output conforms to STD3.
    * @return Unicode string.
    */
-  public static String toUnicode(String input, boolean allowUnassigned, boolean useSTD3ASCIIRules)
-  {
-    String original = input;
+  public static String toUnicode(final String inputParm,
+                                 final boolean allowUnassigned,
+                                 final boolean useSTD3ASCIIRules) {
+    final String original = inputParm;
+    String input = inputParm;
     boolean nonASCII = false;
 
     // Step 1: If all code points are inside 0..0x7f, skip to step 3.
@@ -219,8 +223,8 @@ public class IDNA
     for (int i = 0; i < input.length(); i++) {
       int c = input.charAt(i);
       if (c > 0x7f) {
-	nonASCII = true;
-	break;
+        nonASCII = true;
+        break;
       }
     }
 
@@ -228,10 +232,10 @@ public class IDNA
 
     if (nonASCII) {
       try {
-	input = Stringprep.nameprep(input, allowUnassigned);
+        input = Stringprep.nameprep(input, allowUnassigned);
       } catch (StringprepException e) {
-	// ToUnicode never fails!
-	return original;
+        // ToUnicode never fails!
+        return original;
       }
     }
 

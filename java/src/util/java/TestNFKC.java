@@ -33,10 +33,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-public class TestNFKC
-{
-  static String stripComment(String in)
-  {
+/**
+ * Tests the NFKC string normalization algorithm.
+ */
+public class TestNFKC {
+  private TestNFKC() {
+    // prevents construction
+  }
+
+  private static String stripComment(final String in) {
     int c = in.indexOf('#');
     if (c == -1) {
       return in;
@@ -45,8 +50,7 @@ public class TestNFKC
     }
   }
 
-  static String[] split(String in, char sep)
-  {
+  private static String[] split(final String in, final char sep) {
     int c = 0;
     for (int i = 0; i < in.length(); i++) {
       if (in.charAt(i) == sep) {
@@ -54,7 +58,7 @@ public class TestNFKC
       }
     }
 
-    String out[] = new String[c+1];
+    final String[] out = new String[c + 1];
     c = 0;
     int l = 0;
     for (int i = 0; i < in.length(); i++) {
@@ -64,7 +68,7 @@ public class TestNFKC
 	} else {
 	  out[c] = in.substring(l, i);
 	}
-        l = i+1;
+        l = i + 1;
 	c++;
       }
     }
@@ -74,9 +78,8 @@ public class TestNFKC
     return out;
   }
 
-  static boolean containsHighChar(String in)
-  {
-    String[] s = split(in, ' ');
+  private static boolean containsHighChar(final String in) {
+    final String[] s = split(in, ' ');
     for (String value : s) {
       if (value.length() != 4) {
 	return true;
@@ -85,8 +88,7 @@ public class TestNFKC
     return false;
   }
 
-  static String evalUnicode(String in)
-  {
+  private static String evalUnicode(final String in) {
     StringBuilder out = new StringBuilder();
     String[] s = split(in, ' ');
     for (String value : s) {
@@ -95,8 +97,7 @@ public class TestNFKC
     return out.toString();
   }
 
-  static String toUnicode(String in)
-  {
+  private static String toUnicode(final String in) {
     StringBuilder out = new StringBuilder();
     for (int i = 0; i < in.length(); i++) {
       int c = in.charAt(i);
@@ -106,12 +107,15 @@ public class TestNFKC
     return out.toString();
   }
 
-  public static void main(String[] args)
-    throws Exception
-  {
+  /**
+   * Main method.
+   * @param args command line arguments
+   * @throws Exception if error
+   */
+  public static void main(final String[] args) throws Exception {
     if (args.length > 0) {
-      System.out.println("Input: "+args[0]);     
-      System.out.println("Output: "+NFKC.normalizeNFKC(args[0]));
+      System.out.println("Input: " + args[0]);
+      System.out.println("Output: " + NFKC.normalizeNFKC(args[0]));
     } else {
       // Check if the normalization test file exists
       File f = new File("NormalizationTest.txt");
@@ -122,46 +126,44 @@ public class TestNFKC
 	System.exit(1);
       }
 
-      BufferedReader r = new BufferedReader(new FileReader(f));
-      
+      final BufferedReader r = new BufferedReader(new FileReader(f));
+
       String line;
       while (null != (line = r.readLine())) {
 	line = stripComment(line);
 	line = line.trim();
-	if (line.length() == 0) {
-	  // Empty line
-	} else {
-	  String[] cols = split(line, ';');
-	  
-	  if (!containsHighChar(cols[0]) &&
-	      !containsHighChar(cols[1]) &&
-	      !containsHighChar(cols[2]) &&
-	      !containsHighChar(cols[3]) &&
-	      !containsHighChar(cols[4])) {
-	    
-	    String c1 = evalUnicode(cols[0]);
-	    String c2 = evalUnicode(cols[1]);
-	    String c3 = evalUnicode(cols[2]);
-	    String c4 = evalUnicode(cols[3]);
-	    String c5 = evalUnicode(cols[4]);
-	    
-	    String nc1 = NFKC.normalizeNFKC(c1);
-	    String nc2 = NFKC.normalizeNFKC(c2);
-	    String nc3 = NFKC.normalizeNFKC(c3);
-	    String nc4 = NFKC.normalizeNFKC(c4);
-	    String nc5 = NFKC.normalizeNFKC(c5);
-	    
-	    if (!nc1.equals(c4) || !nc2.equals(c4) || !nc3.equals(c4) || !nc4.equals(c4) || !nc5.equals(c4)) {
-	      System.out.println("Error at `"+line+"'");
-	      System.out.println("NFKC(c1) = "+toUnicode(nc1)+", should be "+toUnicode(c4));
-	      System.out.println("NFKC(c2) = "+toUnicode(nc2)+", should be "+toUnicode(c4));
-	      System.out.println("NFKC(c3) = "+toUnicode(nc3)+", should be "+toUnicode(c4));
-	      System.out.println("NFKC(c4) = "+toUnicode(nc4)+", should be "+toUnicode(c4));
-	      System.out.println("NFKC(c5) = "+toUnicode(nc5)+", should be "+toUnicode(c4));
-	      return;
-	    }
-	  }
-	}
+        if (line.length() != 0) {
+          String[] cols = split(line, ';');
+
+          if (!containsHighChar(cols[0])
+              && !containsHighChar(cols[1])
+              && !containsHighChar(cols[2])
+              && !containsHighChar(cols[3])
+              && !containsHighChar(cols[4])) {
+
+            String c1 = evalUnicode(cols[0]);
+            String c2 = evalUnicode(cols[1]);
+            String c3 = evalUnicode(cols[2]);
+            String c4 = evalUnicode(cols[3]);
+            String c5 = evalUnicode(cols[4]);
+
+            String nc1 = NFKC.normalizeNFKC(c1);
+            String nc2 = NFKC.normalizeNFKC(c2);
+            String nc3 = NFKC.normalizeNFKC(c3);
+            String nc4 = NFKC.normalizeNFKC(c4);
+            String nc5 = NFKC.normalizeNFKC(c5);
+
+            if (!nc1.equals(c4) || !nc2.equals(c4) || !nc3.equals(c4) || !nc4.equals(c4) || !nc5.equals(c4)) {
+              System.out.println("Error at `" + line + "'");
+              System.out.println("NFKC(c1) = " + toUnicode(nc1) + ", should be " + toUnicode(c4));
+              System.out.println("NFKC(c2) = " + toUnicode(nc2) + ", should be " + toUnicode(c4));
+              System.out.println("NFKC(c3) = " + toUnicode(nc3) + ", should be " + toUnicode(c4));
+              System.out.println("NFKC(c4) = " + toUnicode(nc4) + ", should be " + toUnicode(c4));
+              System.out.println("NFKC(c5) = " + toUnicode(nc5) + ", should be " + toUnicode(c4));
+              return;
+            }
+          }
+        } // else empty line
       }
 
       System.out.println("No errors detected!");

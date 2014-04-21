@@ -37,14 +37,16 @@ import gnu.inet.encoding.StringprepException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+/**
+ * Caliper-based micro-benchmarks.
+ */
 @SuppressWarnings("UnusedDeclaration")
-public class CaliperStringprep extends SimpleBenchmark
-{
+public class CaliperStringprep extends SimpleBenchmark {
 
-  public CaliperStringprep()
-  {
-  }
-
+  /**
+   * Main method.
+   * @param args unused
+   */
   public static void main(final String... args) {
     // Caliper:
     CaliperStringprep benchmark = new CaliperStringprep();
@@ -86,15 +88,20 @@ public class CaliperStringprep extends SimpleBenchmark
   @Category(CaliperStringprep.class)
   public void runCaliper() {
     new Runner().run(ObjectArrays.concat(
-	    new String[] {"--saveResults", "CaliperStringprep.caliper.json",
-			  "-JBiasedLocking=-XX:BiasedLockingStartupDelay=0",
-			  "-JServer=-server",
-			  "-JAggressiveOpts=-XX:+AggressiveOpts"},
-	    CaliperStringprep.class.getName()));
+            new String[] {"--saveResults", "CaliperStringprep.caliper.json",
+                          "-JBiasedLocking=-XX:BiasedLockingStartupDelay=0",
+                          "-JServer=-server",
+                          "-JAggressiveOpts=-XX:+AggressiveOpts"},
+            CaliperStringprep.class.getName()));
   }
 
-  public int timeNodePrep3x(final int reps) throws StringprepException
-  {
+  /**
+   * Times 3 nodepreps of varying difficulty.
+   * @param reps repetitions
+   * @return dummy value
+   * @throws StringprepException thrown if error
+   */
+  public int timeNodePrep3x(final int reps) throws StringprepException {
     int dummy = 0;
     for (int i = 0; i < reps; i++) {
       final String out = Stringprep.nodeprep("XmPpUserName");
@@ -105,8 +112,13 @@ public class CaliperStringprep extends SimpleBenchmark
     return dummy;
   }
 
-  public int timeNamePrep3x(final int reps) throws StringprepException
-  {
+    /**
+     * Times 3 namepreps of varying difficulty.
+     * @param reps repetitions
+     * @return dummy value
+     * @throws StringprepException thrown if error
+     */
+  public int timeNamePrep3x(final int reps) throws StringprepException {
     int dummy = 0;
     for (int i = 0; i < reps; i++) {
       final String out = Stringprep.nameprep("domainName.com");
@@ -116,8 +128,14 @@ public class CaliperStringprep extends SimpleBenchmark
     }
     return dummy;
   }
-  public int timeResourcePrep3x(final int reps) throws StringprepException
-  {
+
+    /**
+     * Times 3 resourcepreps of varying difficulty.
+     * @param reps repetitions
+     * @return dummy value
+     * @throws StringprepException thrown if error
+     */
+  public int timeResourcePrep3x(final int reps) throws StringprepException {
     int dummy = 0;
     for (int i = 0; i < reps; i++) {
       final String out = Stringprep.resourceprep("Client-12345");
@@ -128,8 +146,13 @@ public class CaliperStringprep extends SimpleBenchmark
     return dummy;
   }
 
-  public int timeXMPPStringpreps3x(final int reps) throws StringprepException
-  {
+  /**
+   * Times 3 times each of 3 kinds of stringpreps of varying difficulty.
+   * @param reps repetitions
+   * @return dummy value
+   * @throws StringprepException thrown if error
+   */
+  public int timeXMPPStringpreps3x(final int reps) throws StringprepException {
     int dummy = 0;
     for (int i = 0; i < reps; i++) {
       final String outA1 = Stringprep.nodeprep("XmPpUserName");
@@ -151,10 +174,12 @@ public class CaliperStringprep extends SimpleBenchmark
   }
 
   /**
-   * Easy to optimize input but still common for XMPP.
+   * Times easy to optimize input but still common for XMPP.
+   * @param reps repetitions
+   * @return dummy value
+   * @throws StringprepException thrown if error
    */
-  public int timeXMPPSimpleStringprep(final int reps) throws StringprepException
-  {
+  public int timeXMPPSimpleStringprep(final int reps) throws StringprepException {
     int dummy = 0;
     for (int i = 0; i < reps; i++) {
       final String out1 = Stringprep.nodeprep("myusername5");

@@ -32,16 +32,24 @@ package gnu.inet.encoding;
 /**
  * Exception handling for StringPrep class.
  */
-public class StringprepException
-  extends Exception
-{
-  public static String CONTAINS_UNASSIGNED = "Contains unassigned code points.";
-  public static String CONTAINS_PROHIBITED = "Contains prohibited code points.";
-  public static String BIDI_BOTHRAL = "Contains both R and AL code points.";
-  public static String BIDI_LTRAL = "Leading and trailing code points not both R or AL.";
+public class StringprepException extends Exception {
+  /** Unassigned code points error message. */
+  public static final String CONTAINS_UNASSIGNED = "Contains unassigned code points.";
 
-  public StringprepException(String m)
-  {
+  /** Prohibited code points error message. */
+  public static final String CONTAINS_PROHIBITED = "Contains prohibited code points.";
+
+  /** Both R and AL bidi code points. */
+  public static final String BIDI_BOTHRAL = "Contains both R and AL code points.";
+
+  /** Mismatching leading/trailing bidi code points. */
+  public static final String BIDI_LTRAL = "Leading and trailing code points not both R or AL.";
+
+  /**
+   * Constructor.
+   * @param m error message.
+   */
+  public StringprepException(final String m) {
     super(m);
   }
 }
