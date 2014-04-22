@@ -388,6 +388,7 @@ public final class RangeSet {
     // if found, returns the index, otherwise "-insertionPoint - 1"
     final int idxEnd =
             Arrays.binarySearch(ranges, new Range(inputRange.last), CONTAINS_COMPARATOR);
+/*
     // search for start in "head" range only (likely small)
     final int startFromIdx = 0;
     final int startEndIdx;
@@ -396,8 +397,11 @@ public final class RangeSet {
     } else {
       startEndIdx = -(idxEnd + 1);
     }
+*/
     final int idxStart =
-            Arrays.binarySearch(ranges, startFromIdx, startEndIdx,
+            Arrays.binarySearch(ranges,
+                // when using java 6+, from- & to index can be specified
+                //              startFromIdx, startEndIdx,
                                 new Range(inputRange.first), CONTAINS_COMPARATOR);
 
     // If whole range in text outside same non-contained range, won't be found
@@ -412,13 +416,16 @@ public final class RangeSet {
     }
 
     // text spans across multiple ranges of set, need to search individual chars
-    final int searchStart = -idxStart + 1;
-    final int searchEnd = -idxEnd + 1;
+    //final int searchStart = -idxStart + 1;
+    //final int searchEnd = -idxEnd + 1;
 
     for (int i = 0; i < len;) {
       final int cp = Character.codePointAt(text, i);
       i += Character.charCount(cp);
-      final int idx = Arrays.binarySearch(ranges, searchStart, searchEnd, new Range(cp), CONTAINS_COMPARATOR);
+      final int idx = Arrays.binarySearch(ranges,
+          // when using java 6+, from- & to index can be specified
+          //                              searchStart, searchEnd,
+                                          new Range(cp), CONTAINS_COMPARATOR);
       if (idx > 0) {
         return true;
       }
