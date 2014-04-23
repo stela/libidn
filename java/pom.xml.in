@@ -65,7 +65,7 @@
 
       <dependency>
           <groupId>com.google.guava</groupId>
-          <artifactId>guava</artifactId>
+          <artifactId>guava-jdk5</artifactId>
           <!-- 16.0+ lacks Closeables.closeQuietly() used by caliper-0.5 -->
           <version>15.0</version>
           <scope>test</scope>
