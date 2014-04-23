@@ -44,6 +44,10 @@
     <url>http://www.gnu.org/</url>
   </organization>
 
+  <prerequisites>
+    <maven>2.2.1</maven>
+  </prerequisites>
+
   <dependencies>
       <dependency>
           <groupId>com.google.code.findbugs</groupId>
@@ -85,15 +89,15 @@
       </plugin>
 
       <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.17</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.17</version>
       </plugin>
 
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.12</version>
+            <version>2.12.1</version>
             <executions>
                 <execution>
                     <goals>
@@ -115,7 +119,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.12</version>
+                <version>2.12.1</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -134,11 +138,33 @@
               <plugins>
                   <plugin>
                       <artifactId>maven-surefire-plugin</artifactId>
+                      <version>2.17</version>
                       <configuration>
                           <includes>
                               <include>**/Caliper*.java</include>
                           </includes>
                       </configuration>
+                  </plugin>
+
+                  <plugin>
+                      <groupId>org.codehaus.mojo</groupId>
+                      <artifactId>build-helper-maven-plugin</artifactId>
+                      <version>1.8</version>
+
+                      <executions>
+                          <execution>
+                              <id>add-test-source</id>
+                              <phase>generate-test-sources</phase>
+                              <goals>
+                                  <goal>add-test-source</goal>
+                              </goals>
+                              <configuration>
+                                  <sources>
+                                      <source>src/test/java6</source>
+                                  </sources>
+                              </configuration>
+                          </execution>
+                      </executions>
                   </plugin>
               </plugins>
           </build>

@@ -35,7 +35,6 @@ import com.google.common.collect.ObjectArrays;
 import gnu.inet.encoding.Stringprep;
 import gnu.inet.encoding.StringprepException;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 /**
  * Caliper-based micro-benchmarks.
@@ -83,9 +82,14 @@ public class CaliperStringprep extends SimpleBenchmark {
    * Add the "Publish Caliper microbenchmark results" post-build action.
    * In the caliper-ci post-build action, set
    * "JSON result files" to "java/*.caliper.json".
+   *
+   * More robust, use one jenkins project to download the source and
+   * run "make bootstrap", create a second jenkins project having its
+   * workspace assigned to the previous one's "java" subdirectory
+   * in order to avoid issues with having the maven module in a subdirectory.
+   * The first jenkins project should trigger building the second.
    */
   @Test
-  @Category(CaliperStringprep.class)
   public void runCaliper() {
     new Runner().run(ObjectArrays.concat(
             new String[] {"--saveResults", "CaliperStringprep.caliper.json",
